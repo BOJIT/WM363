@@ -1,0 +1,3 @@
+[submodule "matlab_tools"]
+	path = matlab_tools
+	url = git@github.com:BOJIT/matlab_tools.git

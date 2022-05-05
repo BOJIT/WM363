@@ -1,0 +1,12 @@
+bin/
+slprj/
+hooks/locals
+*.r2018b
+*.test
+*.autosave
+*.asv
+*.slxc
+*.DS_Store
+*.mat
+.vscode/settings.json
+.vscode/matlab.code-snippets
