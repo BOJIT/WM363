@@ -64,11 +64,6 @@ g = poly2sym(n)/poly2sym(d);
 gout = vpa(g, 3);
 disp(latex(gout));
 
-% gn = factor(poly2sym(n))
-% gd = factor(poly2sym(d));
-% disp(gn);
-% disp(gd);
-
 %----------------------------------- Output -----------------------------------%
 
 disp("A Jacobian");
