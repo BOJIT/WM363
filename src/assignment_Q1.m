@@ -56,10 +56,13 @@ u_fake = [
     7.2192;
 ];
 
-s = m.stateSpaceModel(q_fake, u_fake);
+m.setEquilibriumPoints(q_fake, u_fake);
 
-t = m.transferFcn(s);
+p = m.transferFcn(m.EquilibriumStateSpace);
 
-disp(latex(t));
+m.launchDesigner(p);
+% pzplot(m.sym2tf(p*c));
+
+
 
 %------------------------------ Helper Functions ------------------------------%
