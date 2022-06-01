@@ -58,11 +58,16 @@ u_fake = [
 
 m.setEquilibriumPoints(q_fake, u_fake);
 
-p = m.transferFcn(m.EquilibriumStateSpace);
+% p = m.transferFcn(m.EquilibriumStateSpace);
+%
+% m.launchDesigner(p);
 
-m.launchDesigner(p);
-% pzplot(m.sym2tf(p*c));
+% f = m.plotEigenValues(m.EquilibriumStateSpace.A);
+% f.Title = "Open-Loop Eigenvalues of A Matrix";
 
+e = [-2.63, -0.88, (-2+0.5i), (-2-0.5i)];
 
+k = m.stateFeedbackController(e);
+m.plotStepResponse(k);
 
 %------------------------------ Helper Functions ------------------------------%
