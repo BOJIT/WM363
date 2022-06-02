@@ -22,7 +22,7 @@ c.T_0 = 354650*(1 + 0.01*D6*D7);  % N
 c.K_x = 0.1;                      % radsm^-1
 c.K_y = -50;                      % radsm^-1
 
-%-------------------------------- Entry Point ---------------------------------%
+%----------------------------------- Model ------------------------------------%
 
 % Initialise class with 1 input (m), 4 state (n), 1 output (p)
 m = MimoControl([1, 4, 1], c);
@@ -58,16 +58,21 @@ u_fake = [
 
 m.setEquilibriumPoints(q_fake, u_fake);
 
+%--------------------------------- Controller ---------------------------------%
+
 % p = m.transferFcn(m.EquilibriumStateSpace);
 %
 % m.launchDesigner(p);
 
-% f = m.plotEigenValues(m.EquilibriumStateSpace.A);
-% f.Title = "Open-Loop Eigenvalues of A Matrix";
+e = [-0.1, -0.08, (-0.6+0.5i), (-0.6-0.5i)];
+% e = [-0.1, -0.08, (-5+0.5i), (-5-0.5i)];
+K = m.stateFeedbackMatrix(e);
+disp(K);
 
-e = [-2.63, -0.88, (-2+0.5i), (-2-0.5i)];
+G = m.stateObserverMatrix(e);
+disp(G);
 
-k = m.stateFeedbackController(e);
-m.plotStepResponse(k);
+Kr = m.correctDCGain(K);
+m.plotStepResponse(K, Kr);
 
 %------------------------------ Helper Functions ------------------------------%
