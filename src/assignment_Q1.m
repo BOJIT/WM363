@@ -35,44 +35,48 @@ m.ISOForm = [
     m.Q(3);
 ];
 
-
-% e = m.findEquilibriumPoints([
-%     % Variables can only appear in a single condition!
-%     m.C.T_0 + m.C.K_y*m.Q(2) ~= 0;
-%     m.Q(3) == pi/4;
-%     (m.C.K_x*m.Q(1) + m.U(1) < pi/2) | (m.C.K_x*m.Q(1) + m.U(1) > -pi/2);
-% ]);
-
-
-% Assume equilibrium points worked;
-q_fake = [
+% Set our target equilibrium points
+q_eq = [
     -72.192;
     75.357;
     pi/4;
     0;
 ];
 
-u_fake = [
+u_eq = [
     7.2192;
 ];
 
-m.setEquilibriumPoints(q_fake, u_fake);
+m.setEquilibriumPoints(q_eq, u_eq);
 
 %--------------------------------- Controller ---------------------------------%
 
-% p = m.transferFcn(m.EquilibriumStateSpace);
-%
-% m.launchDesigner(p);
+% METHOD 1 - F-Domain Design
+p = m.plantTransferFcn();
 
+% Apply Controller 1
+syms s;
+c1 = (1+0.5*s)/(1+0.2*s);
+
+c_inner = m.applyController(p, c1);
+
+m.launchDesigner(c_inner);
+
+
+% METHOD 2 - Full-State Feedback
 e = [-0.1, -0.08, (-0.6+0.5i), (-0.6-0.5i)];
-% e = [-0.1, -0.08, (-5+0.5i), (-5-0.5i)];
 K = m.stateFeedbackMatrix(e);
-disp(K);
-
 G = m.stateObserverMatrix(e);
-disp(G);
-
 Kr = m.correctDCGain(K);
-m.plotStepResponse(K, Kr);
 
-%------------------------------ Helper Functions ------------------------------%
+% m.plotStepResponse(K, Kr);
+
+%---------------------------------- Simulink ----------------------------------%
+
+Sim_A = m.EquilibriumStateSpace.A;
+Sim_B = m.EquilibriumStateSpace.B;
+Sim_C = m.EquilibriumStateSpace.C;
+
+Sim_K = K;
+Sim_Kr = Kr;
+Sim_G = G;

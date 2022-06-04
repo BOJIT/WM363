@@ -30,18 +30,7 @@ func2 = @(x, y) ((-b_x/b_y)*x - y);
 
 f = Figure();
 
-h = zeros(length(step));
-for i = 1:length(step)
-    for j = 1:length(step)
-        h(i, j) = func(step(i), step(j));
-    end
-end
-
 % figure;
-p = pcolor(f.Axes(1), step, step, h);
-set(p, 'EdgeColor', 'none');
-colorbar();
-
 fimplicit(f.Axes(1), func, [-bound, bound, -bound, bound]);
 fimplicit(f.Axes(1), func2, [-bound, bound, -bound, bound]);
 
@@ -57,6 +46,8 @@ disp("Brute Force Solution: q_1, q_2, u");
 disp(x);
 
 f.plot(x(1), x(2), '*r');
+
+legend(["Identity 1 Locus", "Identity 2 Locus", "Numeric Solution"]);
 
 %------------------------------ Helper Functions ------------------------------%
 
