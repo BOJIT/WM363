@@ -56,11 +56,12 @@ p = m.plantTransferFcn();
 
 % Apply Controller 1
 syms s;
-c1 = (1+0.5*s)/(1+0.2*s);
+c1 = 15*(1+0.5*s)/(1+0.2*s);
 
 c_inner = m.applyController(p, c1);
 
-m.launchDesigner(c_inner);
+gN = m.sym2tf(c_inner);
+% m.launchDesigner(c_inner);
 
 
 % METHOD 2 - Full-State Feedback
