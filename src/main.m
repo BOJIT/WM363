@@ -51,18 +51,20 @@ m.setEquilibriumPoints(q_eq, u_eq);
 
 %--------------------------------- Controller ---------------------------------%
 
-% METHOD 1 - F-Domain Design
+% METHOD 1 - Classical Controller
 p = m.plantTransferFcn();
 
-% Apply Controller 1
 syms s;
 c1 = 15*(1+0.5*s)/(1+0.2*s);
+c2 = 1/(s*(1+0.29*s)*(1+0.17*s));
 
 c_inner = m.applyController(p, c1);
+c_outer = m.applyController(c_inner, c2);
 
-gN = m.sym2tf(c_inner);
-% m.launchDesigner(c_inner);
-
+f = Figure();
+step(m.sym2tf(c_outer));
+f.Title = "Step Response for Closed-Loop Classical Controller";
+grid on;
 
 % METHOD 2 - Full-State Feedback
 e = [-0.1, -0.08, (-0.6+0.5i), (-0.6-0.5i)];
@@ -70,7 +72,8 @@ K = m.stateFeedbackMatrix(e);
 G = m.stateObserverMatrix(e);
 Kr = m.correctDCGain(K);
 
-% m.plotStepResponse(K, Kr);
+m.plotStepResponse(K, Kr);
+grid on;
 
 %---------------------------------- Simulink ----------------------------------%
 
@@ -78,6 +81,15 @@ Sim_A = m.EquilibriumStateSpace.A;
 Sim_B = m.EquilibriumStateSpace.B;
 Sim_C = m.EquilibriumStateSpace.C;
 
+% ClassicalController.slx
+[n, d] = numden(c1);
+Sim_c1_n = sym2poly(n);
+Sim_c1_d = sym2poly(d);
+[n, d] = numden(c2);
+Sim_c2_n = sym2poly(n);
+Sim_c2_d = sym2poly(d);
+
+% StateSpaceController.slx
 Sim_K = K;
 Sim_Kr = Kr;
 Sim_G = G;
